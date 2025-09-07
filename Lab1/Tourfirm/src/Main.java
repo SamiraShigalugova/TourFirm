@@ -7,6 +7,32 @@ class Sale {
     private double discount;
     private double finalPrice;
 
+
+
+    public static boolean isValidId(Integer id)
+    {
+        return id != null && id>0;
+    }
+
+    public static boolean isValidDate(String date)
+    {
+        return date!=null && !date.isEmpty();
+    }
+
+    public static boolean isValidPrice(double price)
+    {
+        return price>0;
+    }
+
+    public static boolean isValidDiscount(double discount)
+    {
+        return discount>=0;
+    }
+
+
+
+
+    
     public Sale() {
     }
     public Integer getSaleId(){
@@ -41,32 +67,32 @@ class Sale {
     }
     public void setClientId(Integer clientId)
     {
-        if (clientId == null || clientId <= 0) {
+        if (!isValidId(clientId)) {
             throw new IllegalArgumentException("ID клиента должно быть положительным");}
         this.clientId = clientId;
     }
     public void setTourId(Integer tourId) {
-        if (tourId == null || tourId <= 0) {
+        if (!isValidId(tourId)) {
             throw new IllegalArgumentException("ID тура должно быть положительным числом");
         }
         this.tourId = tourId;
     }
 
     public void setSaleDate(String saleDate) {
-        if (saleDate == null || saleDate.isEmpty()) {
+        if (!isValidDate(saleDate)) {
             throw new IllegalArgumentException("Дата продажи не может быть пустой");
         }
         this.saleDate = saleDate;
     }
     public void setBasePrice(double basePrice) {
-        if (basePrice <= 0) {
+        if (!isValidPrice(basePrice)) {
             throw new IllegalArgumentException("Стоимость должна быть положительным числом");
         }
         this.basePrice = basePrice;
         calculateFinalPrice();
     }
     public void setDiscount(double discount) {
-        if (discount <= 0) {
+        if (!isValidDiscount(discount)) {
             throw new IllegalArgumentException("Стоимость должна быть положительным числом");
         }
         this.discount = discount;

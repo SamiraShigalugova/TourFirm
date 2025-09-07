@@ -1,3 +1,4 @@
+import org.json.JSONObject;
 class Sale {
     private Integer saleId;
     private Integer clientId;
@@ -34,6 +35,34 @@ class Sale {
 
     
     public Sale() {
+    }
+    public Sale(Integer saleId,Integer clientId, Integer tourId, String saleDate, double basePrice,double discount)
+    {
+        setSaleId(saleId);
+        setClientId(clientId);
+        setTourId(tourId);
+        setSaleDate(saleDate);
+        setBasePrice(basePrice);
+        setDiscount(discount);
+    }
+
+
+    public Sale(String data) {
+        if (data.trim().startsWith("{")) {
+            JSONObject json = new JSONObject(data);
+            setClientId(json.getInt("clientId"));
+            setTourId(json.getInt("tourId"));
+            setSaleDate(json.getString("saleDate"));
+            setBasePrice(json.getDouble("basePrice"));
+            setDiscount(json.getDouble("discount"));
+        } else {
+            String[] parts = data.split(",");
+            setClientId(Integer.parseInt(parts[0].trim()));
+            setTourId(Integer.parseInt(parts[1].trim()));
+            setSaleDate(parts[2].trim());
+            setBasePrice(Double.parseDouble(parts[3].trim()));
+            setDiscount(Double.parseDouble(parts[4].trim()));
+        }
     }
     public Integer getSaleId(){
         return saleId;
@@ -93,7 +122,7 @@ class Sale {
     }
     public void setDiscount(double discount) {
         if (!isValidDiscount(discount)) {
-            throw new IllegalArgumentException("Стоимость должна быть положительным числом");
+            throw new IllegalArgumentException("Скидка должна быть положительным числом");
         }
         this.discount = discount;
         calculateFinalPrice();
@@ -109,14 +138,26 @@ class Sale {
 }
 public class Main {
     public static void main(String[] args) {
-        Sale sale = new Sale();
-        sale.setClientId(123);
-        sale.setTourId(456);
-        sale.setSaleDate("2025-12-12");
-        sale.setBasePrice(1000.00);
-        sale.setDiscount(100.00);
-
-        System.out.println("Итоговая цена: " + sale.getFinalPrice());
+        Sale sale1 = new Sale();
+        sale1.setClientId(123);
+        sale1.setTourId(456);
+        sale1.setSaleDate("2025-12-12");
+        sale1.setBasePrice(1000);
+        sale1.setDiscount(100);
+        Sale sale2 = new Sale(123, 456, 5, "2024-12-12", 500, 100);
+        Sale sale3 = new Sale("123,456,2024-12-12,1000,203");
+        String json = "{"
+                + "\"clientId\": 123,"
+                + "\"tourId\": 456,"
+                + "\"saleDate\": \"2024-12-12\","
+                + "\"basePrice\": 1500.0,"
+                + "\"discount\": 100.0"
+                + "}";
+        Sale sale4 = new Sale(json);
+        System.out.println("Итоговая цена: " + sale1.getFinalPrice());
+        System.out.println("Итоговая цена: " + sale2.getFinalPrice());
+        System.out.println("Итоговая цена: " + sale3.getFinalPrice());
+        System.out.println("Итоговая цена: " + sale4.getFinalPrice());
     }
 }
 

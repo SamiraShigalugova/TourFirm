@@ -1,4 +1,5 @@
 import org.json.JSONObject;
+import java.util.Objects;
 class Sale {
     private Integer saleId;
     private Integer clientId;
@@ -36,9 +37,8 @@ class Sale {
     
     public Sale() {
     }
-    public Sale(Integer saleId,Integer clientId, Integer tourId, String saleDate, double basePrice,double discount)
+    public Sale(Integer clientId, Integer tourId, String saleDate, double basePrice,double discount)
     {
-        setSaleId(saleId);
         setClientId(clientId);
         setTourId(tourId);
         setSaleDate(saleDate);
@@ -64,6 +64,7 @@ class Sale {
             setDiscount(Double.parseDouble(parts[4].trim()));
         }
     }
+    
     public Integer getSaleId(){
         return saleId;
     }
@@ -135,17 +136,41 @@ class Sale {
         }
         this.finalPrice = result;
     }
+
+
+
+     public String getLongInfo() {
+        return "Номер продажи: " + saleId +
+                ", клиент: " + clientId +
+                ", тур: " + tourId +
+                ", дата: " + saleDate + '\'' +
+                ", базовая цена: " + basePrice +
+                ", скидка: " + discount +
+                ", конечная цена: " + finalPrice +
+                '}';
+    }
+    public String getShortInfo() {
+        return "Номер продажи: " + saleId +
+                ", клиент: " + clientId +
+                ", тур: " + tourId +
+                ", итого: " + finalPrice + " руб.";
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Sale)) return false;
+        Sale objSale = (Sale) obj;
+        return Objects.equals(this.clientId, objSale.clientId) &&
+                Objects.equals(this.tourId, objSale.tourId) &&
+                Objects.equals(this.saleDate, objSale.saleDate) &&
+                this.basePrice == objSale.basePrice &&
+                this.discount == objSale.discount;
+    }
+    
 }
 public class Main {
     public static void main(String[] args) {
-        Sale sale1 = new Sale();
-        sale1.setClientId(123);
-        sale1.setTourId(456);
-        sale1.setSaleDate("2025-12-12");
-        sale1.setBasePrice(1000);
-        sale1.setDiscount(100);
-        Sale sale2 = new Sale(123, 456, 5, "2024-12-12", 500, 100);
-        Sale sale3 = new Sale("123,456,2024-12-12,1000,203");
+        Sale sale1 = new Sale(123, 456, "2024-12-12", 1000, 100);
+        Sale sale2 = new Sale("123,456,2024-12-12,1000,100");
         String json = "{"
                 + "\"clientId\": 123,"
                 + "\"tourId\": 456,"
@@ -153,11 +178,16 @@ public class Main {
                 + "\"basePrice\": 1500.0,"
                 + "\"discount\": 100.0"
                 + "}";
-        Sale sale4 = new Sale(json);
+        Sale sale3 = new Sale(json);
         System.out.println("Итоговая цена: " + sale1.getFinalPrice());
         System.out.println("Итоговая цена: " + sale2.getFinalPrice());
         System.out.println("Итоговая цена: " + sale3.getFinalPrice());
-        System.out.println("Итоговая цена: " + sale4.getFinalPrice());
+
+        System.out.println("Полная версия объекта:");
+        System.out.println(sale1.getLongInfo());
+        System.out.println("\nКраткая версия объекта");
+        System.out.println(sale1.getShortInfo());
+        System.out.println(sale1.equals(sale2));
     }
 }
 

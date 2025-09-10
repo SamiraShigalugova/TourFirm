@@ -1,5 +1,47 @@
 import org.json.JSONObject;
 import java.util.Objects;
+class ShortSaleClass
+{
+    private Integer saleId;
+    private Integer clientId;
+    private Integer tourId;
+    private double finalPrice;
+
+
+    public ShortSaleClass(Integer saleId, Integer clientId, Integer tourId, double finalPrice)
+    {
+        this.saleId = saleId;
+        this.clientId = clientId;
+        this.tourId = tourId;
+        this.finalPrice = finalPrice;
+    }
+
+
+    public Integer getSaleId()
+    {
+        return saleId;
+    }
+    public  Integer getClientId()
+    {
+        return clientId;
+    }
+    public Integer getTourId()
+    {
+        return tourId;
+    }
+    public Double getFinalPrice()
+    {
+        return finalPrice;
+    }
+    public String getShortInfo() {
+        return "Номер продажи: " + saleId +
+                ", клиент: " + clientId +
+                ", тур: " + tourId +
+                ", итого: " + finalPrice + " руб.";
+    }
+
+
+}
 class Sale {
     private Integer saleId;
     private Integer clientId;
@@ -165,10 +207,15 @@ class Sale {
                 this.basePrice == objSale.basePrice &&
                 this.discount == objSale.discount;
     }
+
+    public ShortSaleClass ShortInfo()
+    {
+        return new ShortSaleClass(saleId,clientId,tourId,finalPrice);
+    }
     
 }
 public class Main {
-    public static void main(String[] args) {
+     public static void main(String[] args) {
         Sale sale1 = new Sale(123, 456, "2024-12-12", 1000, 100);
         Sale sale2 = new Sale("123,456,2024-12-12,1000,100");
         String json = "{"
@@ -185,9 +232,11 @@ public class Main {
 
         System.out.println("Полная версия объекта:");
         System.out.println(sale1.getLongInfo());
-        System.out.println("\nКраткая версия объекта");
+        System.out.println("Краткая версия объекта");
         System.out.println(sale1.getShortInfo());
         System.out.println(sale1.equals(sale2));
+        ShortSaleClass ShortSale = sale3.ShortInfo();
+        System.out.println("Краткая версия объекта вторая\n" + ShortSale.getShortInfo());
     }
 }
 
